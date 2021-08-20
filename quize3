@@ -1,0 +1,41 @@
+# 신조어 퀴즈 클래스를 만드시오
+
+# -word클래스작성
+# __int__():신조어,보기1,보기2,정답
+# show_question():질문 내용 표시
+# check_answer(): 입력값이 정답인지 확인
+
+# 주어진 프로그램 예제
+# word = Word("얼죽아","얼어 죽어도 아메리카도","얼굴만은 죽어도 아기피부",1)
+# word.show_question()
+# word.check_answer(int(input("=>")))
+
+# 출력결과
+# 얼죽어 뜻은?
+# 1.얼어 죽어도 아메리카도
+# 2.얼굴만은 죽어도 아기피부
+# =>1
+# 정답입니다.
+
+class Word:
+    def __init__(self,word,ex1,ex2,answer):
+        self.word = word
+        self.ex1 = ex1
+        self.ex2 = ex2
+        self.answer = answer
+
+    def show_question(self):
+        print(f"\"{self.word}\"의 뜻은?")
+        print("1."+self.ex1)
+        print("2."+self.ex2)
+
+    def check_answer(self,user_input):
+        if user_input == self.answer:
+            print("정답입니다.")
+        else:
+            print("정답이 아닙니다.")
+
+
+word = Word("얼죽아","얼어 죽어도 아메리카도","얼굴만은 죽어도 아기피부",1)
+word.show_question()
+word.check_answer(int(input("=>")))
