@@ -1,0 +1,231 @@
+import os
+import tkinter.ttk as ttk
+import tkinter.messagebox as messagebox #메세지 박스 쓰기 위한 모듈
+from tkinter import *
+from tkinter import filedialog
+from PIL import Image
+
+root = Tk()
+root.title("Joseph GUI")
+
+#파일추가 기능
+def add_file():
+    files = filedialog.askopenfilenames(title="이미지 파일을 선택하세요", \
+        filetypes=(("PNG파일","*.png"),("모든파일","*.*")), \
+        initialdir="C:/")#파일추가 선택시 최초경로 설정 현재 C drive로 설정
+        #filetypes 파일추가 선택시 어떠한 파일을 보여줄지 설정 가능
+    #사용자가 선택한 파일 목록
+    for file in files:
+        list_box.insert(END, file)
+
+def del_file():
+    #reversed를 쓰는 이유 그냥 삭제시 첫번째 부터 삭제하면 뒤에 인덱스가 바뀌게 되어 뒤에서 부터 삭제 필요
+    #EX) 1,3삭제시 3->2로 인덱스가 변경됨 1이 삭제되기 때문 그래서 뒤에서 부터 삭제해야 1,3모두 정확히 삭제 가능
+    #curselection() 선택된 항목을 튜플로 반환
+    for index in reversed(list_box.curselection()):
+        list_box.delete(index)
+
+#찾아보기 클릭 후 저장경로
+def file_dest_path():
+    forder_selected = filedialog.askdirectory()
+    if forder_selected == "":
+        return
+    txt_dest_path.delete(0,END)
+    txt_dest_path.insert(0,forder_selected)
+
+#이미지 통합
+def merge_img():
+    try:
+        # 가로넓이
+        img_width = cmb_widt.get()
+        if img_width == "원본유지":
+            img_width = -1 # -1 일때는 원본 기준으로
+        else:
+            img_width = int(img_width)
+
+        # 간격
+        img_space = cmb_space.get()
+        if img_space == "좁게":
+            img_space = 30
+        elif img_space == "보통":
+            img_space = 60
+        elif img_space == "넓게":
+            img_space = 90
+        else: # 없음
+            img_space = 0
+
+        # 포맷
+        img_format = cmb_format.get().lower() # PNG, JPG, BMP 값을 받아와서 소문자로 변경
+
+        #####################################
+
+        images = [Image.open(x) for x in list_box.get(0, END)]    
+
+        # 이미지 사이즈 리스트에 넣어서 하나씩 처리
+        image_sizes = [] # [(width1, height1), (width2, height2), ...]
+        if img_width > -1:
+            # width  값 변경
+            image_sizes = [(int(img_width), int(img_width * x.size[1] / x.size[0])) for x in images]
+        else:
+            # 원본 사이즈 사용
+            image_sizes = [(x.size[0], x.size[1]) for x in images]
+
+        # 계산식
+        # 100 * 60 이미지가 있음. -> width 를 80 으로 줄이면 height 는?
+        # (원본 width) : (원본 height) = (변경 width) : (변경 height)
+        #     100      :     60       =      80      :     ?
+        #      x       :     y        =      x'      :     y'
+        #    xy' = x'y
+        #    y' = x'y / x -> 이 식을 적용
+        #  100:60=80:48
+
+        # 우리 코드에 대입하려면?
+        # x = width = size[0]
+        # y = height = size[1]
+        # x' = img_width # 이 값으로 변경 해야 함
+        # y' = x'y / x = img_width * size[1] / size[0]
+
+        widths, heights = zip(*(image_sizes))
+
+        # 최대 넓이, 전체 높이 구해옴
+        max_width, total_height = max(widths), sum(heights)
+        
+        # 스케치북 준비
+        if img_space > 0: # 이미지 간격 옵션 적용
+            total_height += (img_space * (len(images) - 1))
+
+        result_img = Image.new("RGB", (max_width, total_height), (255, 255, 255)) # 배경 흰색
+        y_offset = 0 # y 위치
+
+        for idx, img in enumerate(images):
+            # width 가 원본유지가 아닐 때에는 이미지 크기 조정
+            if img_width > -1:
+                img = img.resize(image_sizes[idx])
+
+            result_img.paste(img, (0, y_offset))
+            y_offset += (img.size[1] + img_space) # height 값 + 사용자가 지정한 간격
+
+            progress = (idx + 1) / len(images) * 100 # 실제 percent 정보를 계산
+            p_var.set(progress)
+            progressbar_bar.update()
+
+        # 포맷 옵션 처리
+        file_name = "joseph_python." + img_format
+        dest_path = os.path.join(txt_dest_path.get(), file_name)
+        result_img.save(dest_path)
+        messagebox.showinfo("알림", "작업이 완료되었습니다.")
+    except Exception as err: # 예외처리
+        messagebox.showerror("에러", err)
+
+# 선택 버튼 클릭시 작동 함수
+def start():
+    # print("가로넓이 : ", cmb_widt.get())
+    # print("간격 : ", cmb_space.get())
+    # print("포맷 : ", cmb_format.get())
+
+#파일이 선택안됬을때 메세지 노출
+    if list_box.size() == 0:
+        messagebox.showwarning("경고","이미지 파일을 추가하세요")
+        return
+#찾아보기 경로 설정 안했을시 메세지 노출
+    if len(txt_dest_path.get()) == 0:
+        messagebox.showwarning("경고","저장경로를 추가하세요")
+        return
+
+#파일 프레임(파일 추가 ,선택 삭제)
+file_frame =Frame(root)
+file_frame.pack(fill=X,padx=5,pady=5) #pad 간격 띄우기
+
+btn_add_file = Button(file_frame,padx=5,pady=5,width=12, text = "파일추가",command=add_file)
+btn_add_file.pack(side="left")
+
+btn_del_file = Button(file_frame,padx=5,pady=5,width=12, text = "삭제",command=del_file)
+btn_del_file.pack(side="right")
+
+#리스트 프레임
+list_frame = Frame(root)
+list_frame.pack(fill=BOTH,padx=5,pady=5)
+
+#스크롤 바
+scrollbar = Scrollbar(list_frame)
+scrollbar.pack(side=RIGHT,fill=Y)
+
+#리스트박스
+list_box = Listbox(list_frame,selectmode=EXTENDED,height=15,yscrollcommand=scrollbar.set)
+list_box.pack(side=LEFT,fill=BOTH,expand=True)
+
+#저장 경로 프레임 
+#frame 과 labelframe 차이 labelframe은 text를 써서 명칭을 지정할 수 있다.
+path_frame = LabelFrame(root,text="저장경로")
+path_frame.pack(fill=X,padx=5,pady=5,ipady=5)
+
+#텍스트 위젯
+# Entry 한줄만 쓸데 사용 Text 여러줄 필요할때 사용
+txt_dest_path = Entry(path_frame)
+txt_dest_path.pack(side=LEFT,fill=X,expand=True,padx=5,pady=5,ipady=4)
+#ipady=> 엔트리영역 높이설정
+
+#버튼 위젯
+btn_desth_path = Button(path_frame,text="찾아보기",width=10,command=file_dest_path)
+btn_desth_path.pack(side=RIGHT,padx=5,pady=5)
+
+#옵션 프레임
+frame_option = LabelFrame(root, text="옵션")
+frame_option.pack(padx=5,pady=5,ipady=5)
+
+# 가로 넓이 옵션
+# r가로 넓이 레이블
+lbl_width = Label(frame_option, text="가로넓이",width=8)
+lbl_width.pack(side=LEFT,padx=5,pady=5)
+
+# 가로 넓이 콤보 박스
+# state="readonly"사용자가 임의로 작성 x 정해진 값만 선택 가능
+opt_width = ["원본유지","1024","800","640"]
+cmb_widt = ttk.Combobox(frame_option,state="readonly",values=opt_width,width=10)
+#미리 첫번째 "원본유지"가 선택되있도록 인덱스 설정
+cmb_widt.current(0)
+cmb_widt.pack(side=LEFT,padx=5,pady=5)
+
+#2. 간격옵션
+# 간격 옵션 레아블
+lbl_space = Label(frame_option, text="간격",width=8)
+lbl_space.pack(side=LEFT,padx=5,pady=5)
+
+# 간격 옵션 콤보
+opt_space = ["없음","좁게","보통","넓게"]
+cmb_space = ttk.Combobox(frame_option,state="readonly",values=opt_space,width=10)
+cmb_space.current(0)
+cmb_space.pack(side=LEFT,padx=5,pady=5)
+
+#3. 파일 포멧 옵션
+# 파일 포멧 옵션 레아블
+lbl_format = Label(frame_option, text="포맷",width=8)
+lbl_format.pack(side=LEFT,padx=5,pady=5)
+
+# 파일 포멧 옵션 콤보
+opt_format = ["PNG","JPG","BMP"]
+cmb_format = ttk.Combobox(frame_option,state="readonly",values=opt_format,width=10)
+cmb_format.current(0)
+cmb_format.pack(side=LEFT,padx=5,pady=5)
+
+#진행 상황 progess Bar
+frame_prgress = LabelFrame(root,text="진행상황")
+frame_prgress.pack(fill=X,padx=5,pady=5,ipady=5)
+
+p_var = DoubleVar()
+progressbar_bar = ttk.Progressbar(frame_prgress, maximum=100,variable=p_var)
+progressbar_bar.pack(fill=X,padx=5,pady=5)
+
+#프로그레스바 실행
+frame_run = Frame(root)
+frame_run.pack(fill=X,padx=5,pady=5)
+
+btn_close = Button(frame_run,padx=5,pady=5,text="닫기",width=12,command=root.quit)
+btn_close.pack(side=RIGHT,padx=5,pady=5)
+
+btn_start = Button(frame_run,padx=5,pady=5,text="시작",width=12,command=start)
+btn_start.pack(side=RIGHT,padx=5,pady=5)
+
+root.resizable(False,False)# 크기 변경 불가
+scrollbar.config(command=list_box.yview)
+root.mainloop()
