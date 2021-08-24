@@ -1,0 +1,14 @@
+from threading import current_thread
+import time
+import keyboard
+from PIL import ImageGrab
+
+def screenshot():
+    #2021년7월19일 
+    current_time = time.strftime("_%Y%m%d_%H%M%S")#이미지 저장시 파일 이름을 시간으로
+    img = ImageGrab.grab()#이미지 스크린샷
+    img.save("image{}.png".format(current_time))#이미지 저장
+
+keyboard.add_hotkey("F9",screenshot) #프로그램 실행후 f9버튼을 누르면 캡처
+
+keyboard.wait("esc")#esc 버튼을 누를때까지 프로그램 수행
