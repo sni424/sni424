@@ -1,0 +1,22 @@
+#[선정 안내 메일]
+#제목 : 파이썬 특강 안내 [선정]
+#본문 : xx님 축하드립니다. 특강 대상자로 선정되셨습니다. (선정순번1)
+
+from account import *
+from imap_tools import MailBox
+
+#리스트로 관리
+applicant_list = []
+
+with MailBox("imap.gmail.com",993).login(EMAIL_ADRESS,EMAIL_PASSWORD,initial_folder="INBOX") as mailbox:
+    index = 1
+    for msg in mailbox.fetch('(SENTSINCE 20-Aug-2021)'): #2021년 8월20일 이후 메일
+        if "파이썬 특강 신청합니다." in msg.subject:
+            nickname, phone = msg.text.strip().split("/")#.strip()줄바꿈 삭제
+            print("순번 : {} 닉네임 : {} 전화번호 : {}".format(index,nickname,phone))
+            applicant_list.append((msg,index,nickname,phone))#튜플형식으로 추가
+            index += 1
+
+# 확인
+for applicant in applicant_list:
+    print(applicant)
