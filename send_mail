@@ -1,0 +1,28 @@
+#[신청 메일 양식]
+#제목 : 파이썬 특강 신청합니다.
+#본문 : 닉네임/전화번호 뒤 4자리(Random)
+#예) 안녕/1234
+
+import smtplib
+from account import *
+from email.message import EmailMessage
+from random import *
+
+nicknames = ["유재석","박명수","정준하","정형돈","노홍철"]
+
+with smtplib.SMTP("smtp.gmail.com",587) as smpt:
+    smpt.ehlo()
+    smpt.starttls()
+    smpt.login(EMAIL_ADRESS,EMAIL_PASSWORD)
+
+    for nickname in nicknames:
+        msg = EmailMessage()
+        msg["Subject"] = "파이썬 특강 신청합니다." #제목
+        msg["From"] = EMAIL_ADRESS #보내는 사람
+        msg["To"] = "jojonghyeok424@gmail.com" #받는 사람
+        
+        # content = nickname + "/" + str(randint(1000,9999))
+        content = "/".join([nickname,str(randint(1000,9999))])
+        msg.set_content(content)
+        smpt.send_message(msg)
+        print(nickname + "님이 메일 발송 완료")
