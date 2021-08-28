@@ -1,0 +1,94 @@
+#1. 월별 확진자수
+import csv
+f = open("corona.csv")
+data = csv.reader(f)
+next(data)
+
+result = [0] *12
+result2 = [0] *7
+
+for row in data:
+    month = int(row[1].split("-")[1])#인데스1번 년월일
+    year = int(row[1].split("-")[0])
+    if year == 2020:
+        result[month-1] += 1
+    else:
+        result2[month - 1] += 1
+
+print("2020년 월별 코로나 확진자 수" + str(result))
+print("2021년 월별 코로나 확진자 수" + str(result2))
+f.close()
+
+2.해외 유입 확진자 수
+
+import csv
+f = open("corona.csv")
+data = csv.reader(f)
+next(data)
+
+result = 0
+result1 = 0
+for row in data:
+    year = int(row[1].split("-")[0])
+    if year == 2021:
+        if row[7] == "해외유입":
+            result += 1
+    if year == 2020:
+        if row[7] == "해외유입":
+            result1 += 1
+print("2021년해외유입 확진자 수 : " + str(result)+"명")
+print("2020년해외유입 확진자 수 : " + str(result1)+"명")
+f.close()
+
+#3.월별 확진자수 그래프 
+
+import csv
+f = open("corona.csv")
+data = csv.reader(f)
+next(data)
+
+result = [0] *12
+result2 = [0] *7
+
+for row in data:
+    month = int(row[1].split("-")[1])#인데스1번 년월일
+    year = int(row[1].split("-")[0])
+    if year == 2020:
+        result[month-1] += 1
+    else:
+        result2[month - 1] += 1
+
+print("2020년 월별 코로나 확진자 수" + str(result))
+print("2021년 월별 코로나 확진자 수" + str(result2))
+
+import matplotlib.pyplot as plt
+plt.rc('font', family='Malgun Gothic')
+plt.title('2020,21년 월별 확진자수')      # 제목 설정
+plt.xlabel("월별")
+plt.plot(result, 'hotpink',label = "2020년")
+plt.plot(result2, 'green',label = "2021년")
+plt.legend()
+plt.xlim([-1, 13]) # x축 크기 조절
+plt.show()
+
+#연령별 인구 통계
+
+import numpy as np
+import csv
+f = open("age.csv")
+data = csv.reader(f)
+next(data)
+name = input("인구 구조가 알고 싶은 지역의 이름(읍면동 단위)을 입력해주세요 : ")
+name2 = input("인구 구조가 알고 싶은 지역의 이름(읍면동 단위)을 입력해주세요 : ")
+for row in data :
+    if name in row[0].replace(",","") :
+        home = np.array(row[3:], dtype=int) / int(row[2])
+    if name2 in row[0].replace(",",""):
+        home1 = np.array(row[3:], dtype=int) / int(row[2])
+
+import matplotlib.pyplot as plt
+plt.rc('font', family='Malgun Gothic')
+plt.title(name+"+"+name2+' 지역의 인구 구조')
+plt.plot(home)
+plt.plot(home1)
+plt.show()
