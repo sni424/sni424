@@ -1,0 +1,64 @@
+#https://www.acmicpc.net/submit/1330/32549718
+
+input_data = input().split(" ")
+A = int(input_data[0])
+B = int(input_data[1])
+
+if A > B:
+  print(">")
+elif A < B:
+  print("<")
+else:
+  print("==")
+
+#https://www.acmicpc.net/source/32549750
+input_data = input().split(" ")
+A = int(input_data[0])
+
+if A >= 90:
+  print("A")
+elif A >= 80:
+  print("B")
+elif A >= 70:
+  print("C")
+elif A >= 60:
+  print("D") 
+else:
+  print("F")
+
+#https://www.acmicpc.net/problem/2753
+A = int(input())
+
+if (A%4 == 0 and A%100 !=0) or A%400 ==0:
+  print("1")
+else:
+  print("0")
+  
+  
+#https://www.acmicpc.net/problem/14681
+A = int(input())
+B = int(input())
+
+if A > 0 and B > 0:
+    print("1")
+elif A < 0 and B > 0:
+    print("2")
+elif A < 0 and B < 0:
+    print("3")
+else:
+    print("4")
+
+#https://www.acmicpc.net/problem/2884
+
+input_data = input().split(" ")
+
+hour = int(input_data[0])
+minute = int(input_data[1])
+
+minute -= 45
+if minute < 0:
+    minute += 60
+    hour -= 1
+    if hour < 0:
+        hour = 23
+print (str(hour)+" "+str(minute))
