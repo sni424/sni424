@@ -1,0 +1,26 @@
+def is_on_list(self,days):
+  return "Wed" in days
+
+def get_x(days,x):
+  return days[x]
+
+def add_x(days,x):
+  return days.append(x)
+
+def remove_x(days,x):
+  return days.remove(x)
+
+# \/\/\/\/\/\/\  DO NOT TOUCH AREA  \/\/\/\/\/\/\ #
+
+days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+
+print("Is Wed on 'days' list?", is_on_list(days, "Wed"))
+
+print("The fourth item in 'days' is:", get_x(days, 3))
+
+add_x(days, "Sat")
+print(days)
+
+remove_x(days, "Mon")
+print(days)
+# /\/\/\/\/\/\/\ END DO NOT TOUCH AREA /\/\/\/\/\/\/\ #
