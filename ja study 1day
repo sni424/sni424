@@ -1,0 +1,95 @@
+https://nomadcoders.co/javascript-for-beginners/lectures/2882
+2.0->2.8까지 시청 후 복습
+
+html은 js와css를 브라우저랑 연결해주는 중간매개체이다.
+js를 브라우저에서 확인하고 싶은경우 console을 확인 하면 된다.
+console.log(); =>브라우저 콘솔에 원하는 값을 보낸다.
+
+variable(변수)
+모든 프로그래밍 언어에서 변수는 값을 저장하거나 유지하는 역할을 한다.
+
+1.변수를 만들기 위해서는 먼저 const(상수[바뀌지 않는 값])를 사용한다.
+ex) const a = 5;
+2.다른 방법으로 const가 아닌 let을 사용한다.
+ex) let a = 5;
+const는 변수를 변경할 수 없으나, let은 가능하다.
+변수는 업데이트 하거나 수정이 필요한경우 let으로 한다.
+ex)
+const a = 5;
+a = 6; (x)
+
+let a = 5;
+a = 6; (o)
+3.물론 var도 사용이 가능하지만 var 예전에 쓰던것으로 언어로 보호를 해주지 않는다. 실수를 해도 어디서 실수를 했는지 안알려줌.
+
+자바스크립트 세상에서는, 단어에 공백이 필요하면 다음 단어의 첫 문자를 대문자로 쓴다. 이것을 camelCase (낙타 등 모양)이라 부른다.
+ex) my name is hello wolrd => MyNameIsHelloWorld
+
+Booleans(true,false,null,undefined)
+파이썬에 쓰던것처럼 대문자가 아닌 소문자로 쓴다.
+보통 유저가 로그인을 했는가 페이지가 로딩중인가 등 간단한곳에 사용
+ex)
+Boolean
+
+const a = true;
+const b = false;
+const c = null;
+let d;
+console.log(a);
+console.log(b);
+console.log(c);
+console.log(d);
+
+array(배열)
+대괄호를 사용한다.[] , 각각 모든 항목은 쉼표로 분리되어야 한다.
+const a = [1, 2, 3, "hello", false, null, 55, "world"]
+console.log(a)
+console.log(a[2])
+// 배열 추가 push, unshift, splice
+// pushsms 배열 끝에 추가
+// unshift 배열 앞에 추가
+// splice 함수는 원하는 위치에 하나 이상의 요소를 추가
+a.push("add_array")
+a.unshift("hey")
+a.splice(2, 0, "java")//index 2에 "java"추가
+a.splice(2, 0, "java",1)//2개 이상 추가 가능
+// 배열 삭제 pop , shift, splice
+a.pop()//배열의 마지막 요소 삭제
+a.shift()//배열의 첫번째 요소 삭제
+a.splice(2, 1)//index 2부터 1개 삭제
+//delete로 배열을 삭제할 경우 요소는 그대로 존재하며 값만 삭제 됨
+
+
+Objects 
+const player = {
+    name: "hello",
+    age: 28,
+    marry: false,
+};
+
+console.log(player)
+console.log(player.name)
+console.log(player["name"])
+player.age = 27//수정
+player.age = player.age + 1;//업데이트(더하기)
+player.city = "seoul"//추가
+console.log(player)
+
+function 1
+ex)
+function helloWorld(name, age) {
+    console.log("hello my name is " + name + " i'm " + age + " years old")
+}
+helloWorld("awesome", 10);
+helloWorld("cool", 17);
+helloWorld("hot", 27);
+
+const player = {
+    name: "hello",
+    sayHello: function (people) {
+        console.log("hello " + people)
+    },
+}
+
+console.log(player.name)
+player.sayHello("you")
