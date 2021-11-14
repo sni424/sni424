@@ -1,0 +1,275 @@
+https://nomadcoders.co/javascript-for-beginners/lectures/2900
+3.0~3.8
+
+step1 element를 찾아라
+step2 event를 listen해라
+step3 그 event에 반응해라
+
+=======================================================
+
+1. javascript에서는 html을 읽어올 뿐만 아니라 html을 변경할 수 있다.
+ex) document.title = "hello JS"
+아래 코드를 작성하면 id가 title인 모든 정보를 가져온다.
+const title = document.getElementById("title")
+console.dir(title)
+
+1) getElementsByClassName() : 많은 element를 가져올때 씀(array를 반환)
+    <h1 class="hello">Awesome</h1>
+    <h1 class="hello">Awesome</h1>
+    <h1 class="hello">Awesome</h1>
+    <h1 class="hello">Awesome</h1>
+    <h1 class="hello">Awesome</h1>
+js=>const title = document.getElementsByClassName("hello")
+console.log(title)
+
+2) getElementsByTagName() : name을 할당할 수 있음(array를 반환)
+    <div class="hello">
+        <h1>Awesome</h1>
+    </div>
+js=>const title = document.getElementsByTagName("h1");
+console.log(title)
+
+3) querySelector : element를 CSS selector방식으로 검색할 수 있음 
+단 하나의 element를 return해줌
+- 첫번째 element만 가져옴
+- 조건에 맞는 세개 다 가져오고 싶으면 querySelectorAll
+    <div class="hello">
+        <h1>Awesome</h1>
+    </div>
+js=>const title = document.querySelector(".hello h1")
+console.log(title)
+
+    <div class="hello">
+        <h1>Awesome</h1>
+        <h1>Awesome</h1>
+        <h1>Awesome</h1>
+    </div>
+
+js=>const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+title.innerText = "Hello"
+
+const title = document.querySelector("div.hello:first-child h1");
+title.style.color = "red"
+
+=======================================================
+
+2. event
+
+1)event를 찾는법 
+const title = document.getElementById("title")
+console.dir(title)
+에서 console에서 on이있는 단어를 찾으면 된다. 쓸때는 on을 빼고 쓴다
+ex)onclick => click
+
+2)버튼 클릭 시 console에서 원하는 문구 뜨게 하기
+const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+
+function handleTitleClick() {
+    console.log("title was clicked")
+}
+
+title.addEventListener("click", handleTitleClick)
+handleTitleClick을 handleTitleClick()으로 쓰지 않는 이유는 handleTitleClick()썼을경우 버튼을 눌렀을때 실행되는것이 아니라 브라우저를 키자마자 바로 실행되기에 ()을 쓰지 않는다.
+
+function handleTitleClick() {
+    title.style.color = "blue";
+};
+3)함수를 이렇게 바꾸면 클릭했을때 색상을 바꿈
+
+const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+
+function handleTitleClick() {
+    title.style.color = "blue";
+};
+
+function handleMosueEnter() {
+    title.innerHTML = "Hello";
+};
+
+function handleMosueLeave() {
+    title.innerHTML = "Bye"
+};
+
+title.addEventListener("click", handleTitleClick);
+title.addEventListener("mouseenter", handleMosueEnter);
+title.addEventListener("mouseleave", handleMosueLeave);
+
+4)간편하게 바꾸기
+title.onclick = handleTitleClick;
+title.onmouseenter = handleMosueEnter;
+title.onmouseleave = handleMosueLeave;
+
+그러나 addEventListener를 더 선호하는 이유는 removeEventListener를 사용하여 상호작용 가능하기 때문이다.
+
+또한 document에서 body,head,title 은 중요해서 언제든
+ex) document.body 로 가져올수있지만
+div나 h1 등 element 들은 querySelector getElementById등으로 찾아야한다.
+ex) document.querySelector(“h1”);
+
+5) document로 body,title,head등 수정가능
+
+function handleWindowResize() {
+    document.body.style.backgroundColor = "black";
+};
+window.addEventListener("resize", handleWindowResize);
+--------------------------------------------------------------------------------------
+const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+
+function handleTitleClick() {
+    if (title.style.color === "blue") {
+        title.style.color = "black";
+    }
+    else {
+        title.style.color = "blue";
+    }
+};
+
+title.addEventListener("click", handleTitleClick);
+------------------------------------------------------------------------------------
+
+const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+
+function handleTitleClick() {
+    const currentColor = title.style.color;
+    let newColor;
+    if (currentColor === "blue") {
+        newColor = "black";
+    }
+    else {
+        newColor = "blue";
+    }
+    title.style.color = newColor;
+};
+
+title.addEventListener("click", handleTitleClick);
+//이를 토대로 코드를 순차적으로 이해하면,
+//1) click event 발생 및 함수 실행
+//2) currentColor 변수 선언 후 h1.style.color 값 복사 (getter)
+//3) newColor 변수 선언
+//4) currentColor 현재 값 확인
+//5) 조건에 따라 newColor에 "black" or "blue" 값 대입
+//6) 마지막으로 title.style.color에 newColor값 대입 (setter)
+//getter(획득자)'와 ‘setter(설정자)
+
+
+=======================================================
+
+3. CSS in Javascript
+
+css
+body{
+    background-color: beige; 
+}
+h1 {
+    color: blue;
+    transition: color 0.5s ease-in-out;
+}
+.active{
+    color: greenyellow;
+}
+
+js
+const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+function handleTitleClick() {
+    title.className = "active";  //active가 css에 있는 active이다.
+}
+title.addEventListener("click", handleTitleClick);
+=>가능한이유 javascript는 html을 변경하고 css는 html을 바라보고 있기때문에
+
+=>수정
+const title = document.querySelector("div.hello:first-child h1");
+console.log(title);
+
+function handleTitleClick() {
+    const change = "active"
+    if (title.className === change) {
+        title.className = "";
+    }
+    else {
+        title.className = change
+    }
+}
+title.addEventListener("click", handleTitleClick);
+=>그러나 이방법은 기존에 className이 없는 경우에 사용한다. 그 이유는 만약 기존에 className이 있었다면 여기서 className이 active로 빠귀면서 기존 className에 있던 기능들은 사용이 불가능 하다.
+
+=>알맞게 수정
+function handleTitleClick() {
+    const change = "active"
+    if (title.classList.contains(change)) {
+        title.classList.remove(change);
+    }
+    else {
+        title.classList.add(change);
+    }
+}
+=>한줄로 수정
+function handleTitleClick() {
+    title.classList.toggle("active")
+}
+
+
+
+=======================================================
+댓글 요약본
+- getElementsByClassName() : 많은 element를 가져올때 씀(array를 반환)
+- getElementsByTagName() : name을 할당할 수 있음(array를 반환)
+- querySelector : element를 CSS selector방식으로 검색할 수 있음 (ex. h1:first-child)
+단 하나의 element를 return해줌
+⇒ hello란 class 내부에 있는 h1을 가지고 올 수 있다(id도 가능함)
+- 첫번째 element만 가져옴
+- 조건에 맞는 세개 다 가져오고 싶으면 querySelectorAll
+⇒ 세개의 h1이 들어있는 array를 가져다 줌
+- querySelector("#hello); 와 getElementById("hello"); 는 같은 일을 하는 것임
+하지만 후자는 하위요소 가져오는 것을 못하므로 전자만 쓸거다
+
+
+- 지금 js파일이 있기 때문에 js를 통해 html의 내용을 가져올 수 있는 거임
+- document가 html이 js파일을 load하기 때문에 존재 → 그 다음에 browser가 우리가 document에 접근할 수 있게 해줌
+- element의 내부를 보고 싶으면 console.dir()
+기본적으로 object로 표시한 element를 보여줌(전부 js object임)
+그 element 중 앞에 on이 붙은 것들은 event임
+- event: 어떤 행위를 하는 것
+모든 event는 js가 listen할 수 있음
+- eventListener : event를 listen함 → js에게 무슨 event를 listen하고 싶은 지 알려줘야 함
+- title.addEventListener("click") : 누군가가 title을 click하는 것을 listen할 거임 → 무언가를 해줘야함
+
+const title = document.querySelector("div.hello:first-child h1");
+
+function handleTitleClick(){
+title.style.color = "blue";
+}
+title.addEventListener("click",handleTitleClick);
+//click하면 handleTitleClick이라는 function이 동작하길 원함
+//그래서 handle~ 함수에 () 를 안넣은 것임
+//즉, js가 대신 실행시켜주길 바라는 것임!
+
+- function이 js에게 넘겨주고 유저가 title을 click할 경우에 js가 실행버튼을 대신 눌러주길 바라는 것임( 직접 handleTitleClick(); 이렇게 하는 것이 아니라)
+- 함수에서 () 이 두 괄호를 추가함으로써 실행버튼을 누를 수 있는 거임
+
+-title.onclick = handleMouseEnter;
+-title.addEventListener(“mouseenter” , handleMouseEnter);
+
+-위에 두 코드는 동일하나 addEventListener를 선호하는 이유는
+-removeEventListener을 통해서 event listener을 제거할수있기 때문이다.
+
+-document에서 body,head,title 은 중요해서 언제든
+ex) document.body 로 가져올수있지만
+-div나 h1 등 element 들은 querySelector getElementById등으로 찾아야한다.
+ex) document.querySelector(“h1”);
+
+-window는 기본제공
+-function handleWindowResize(){
+-document.body.style.backgroundColor = “tomato”;
+}
+-function handleWindowCopy(){
+alert(“copier”);
+}
+
+-window.addEventListener(“resize”, handleWindowResize);
+-window.addEventListener(“copy”, handleWindowCopy);
