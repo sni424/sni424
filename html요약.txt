@@ -1,0 +1,81 @@
+html 편리기능
+
+emmt문법
+h1+p
+=>
+<h1></h1>
+<p></p>
+
+h1*3
+=>
+<h1></h1>
+<h1></h1>
+<h1></h1>
+
+h$*3
+=>
+<h1></h1>
+<h2></h2>
+<h3></h3>
+
+외
+        h1{hello world}*10
+        h1#hojun
+        h1.hoju
+        (div>table>(tr>(td*2))*3)+(footer>p)
+        div#one.c1.c2.c3
+        ul>li.item$*5
+        a{Click}
+        lorem
+        img:z
+        <!-- lorem*5는 5개의 문장 -->
+        lorem*5
+        <!-- lorem5는 5개의 단어 -->
+        lorem5
+        [a='value1' b="value2" c=1]
+        a[href='www.naver.com']
+        <!--
+            Ctrl + \ : 토글 보이기
+            Ctrl + O : 파일 열기
+            Ctrl + P : 프로젝트 검색
+            Ctrl + F : 열려 있는 파일 내에서 검색
+            Ctrl + Shift + F : 열려 있는 전체 프로젝트 내에서 검색
+            Ctrl + , : Settings
+            Ctrl + N : 새로운 파일
+            Ctrl + S : 파일 저장
+            Ctrl + Shift + S  :다른 이름으로 저장
+            Shift + del : 라인 지우기
+            Ctrl + 클릭 : 여러줄 입력 
+        -->
+등이있다.
+
+<sub>는아래 <sup>은 위참조
+<ol>순서가있는 리스트를 만들때 씀 <ul>은 순서가 필요없는 리스트 
+<ol type="A">등 type을 정할 수 있다. a,i,I을 쓸 수 있다.
+<dl>도있다.
+
+이미첨부
+<img src="./hello.jpg" alt="바사사진">
+<img src="./hello.jpg" srcset="./hello.jp, ./hello.jpg 2x" alt="바사사진">
+srcset해상도가 높아짐에따라 뒤에이미지를 사용해라
+
+유튜브 동영상을 쓰고싶으면 오른쪽클릭 소스 코드 복사를 클릭해서 붙여쓰면됨
+그리고 영상 키값옆에 ?rel=0&amp;autoplay=1&mute=0&amp;loop=1;playlist=영상키값" 을붙이면 자동으로 플레이가된다.
+
+href에서 ./study.css 에서./는 현재 폴더에서 찾는걸 뜻한다.
+href="#move"면 현재페이지에서 아이디가 move인 태그로이동
+href="google.com" target="_blank"면 새창을 만들어서 이동
+href="./test.png" download>이면 말그대로 해당 파일을 다운로드하게 만듬
+====================================================
+엘리님 유튜브
+
+box = [header,footer,section,div,span]
+
+<a> anchor tag 
+
+block = [<div>,] =다음라인으로(줄바꿈) 넘어감
+inline = [<b>,<span>] =같은 라인에서 변경
+
+list(ol,ul,li)
+
+input은 label과 같이 쓰는게 좋음
